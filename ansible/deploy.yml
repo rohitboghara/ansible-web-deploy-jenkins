@@ -1,7 +1,6 @@
 ---
 - name: Jenkisn CI/CD
   hosts: jenkinsserver
-  become: true
   roles:
     - webapp
     - docker
