@@ -1,0 +1,13 @@
+---
+- name: Create file
+  file:
+    path: /root/ansible-jenkins-deploy
+    state: directory
+    owner: admin
+    group: admin
+    mode: '0775'
+
+- name: Copy File python
+  copy:
+    src: python-app
+    dest: /root/ansible-jenkins-deploy/

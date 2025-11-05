@@ -1,0 +1,9 @@
+2025-11-05 12:18:41,647 p=10470 u=root n=ansible WARNING| [WARNING]: Host '10.78.12.152' is using the discovered Python interpreter at '/usr/bin/python3.9', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+
+2025-11-05 12:18:41,648 p=10470 u=root n=ansible INFO| 10.78.12.152 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.9"
+    },
+    "changed": false,
+    "ping": "pong"
+}

@@ -1,0 +1,34 @@
+---
+- name: add GPG key
+  shell: |
+     curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+     chmod a+r /etc/apt/keyrings/docker.asc
+  when: ansible_os_family == "Debian"
+- name: Install dnf-plugins-core
+  package:
+    name: 
+     - dnf-plugins-core
+     - device-mapper-persistent-data
+     - lvm2
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Add Docker CE repo
+  command:
+    cmd: dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+- name: Install docker package
+  package:
+    name: "{{ docker_debian_package if ansible_os_family == 'Debian' else docker_redhat_package }}"
+    state: present
+- name: Docker service start
+  service:
+    name: docker
+    state: started
+- name: docker compose file up
+  community.docker.docker_compose_v2:
+    project_src: /root/ansible-jenkins-deploy/python-app/
+    state: present
+    build: always
+

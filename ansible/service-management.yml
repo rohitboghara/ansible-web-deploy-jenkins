@@ -1,0 +1,67 @@
+---
+- name: all service manage
+  hosts: jenkinsserver
+  become: true
+  vars:
+    port_number: "5000/tcp"
+  vars_prompt:
+    - name: action
+      prompt: |
+         Choose Action:
+          1) Start Docker Service
+          2) Restart Docker Service
+          3) Stop Docker Service
+          4) Start Containers
+          5) Stop Containers
+          6) Remove Containers
+          7) Add Firewall Port
+          8) Remove Firewall Port
+          9) Exit
+      private: no
+  tasks:
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+      when:  action == "1"
+    - name: Restart Docker 
+      service:
+        name: docker
+        state: restarted
+      when: action == "2"
+    - name: Stop Docker
+      service: 
+        name: docker
+        state: stopped
+      when: action == "3"
+    - name: Start Container
+      community.docker.docker_compose_v2:
+        project_src: /root/ansible-jenkins-deploy/python-app/
+        state: present
+      when: action == "4"
+    - name: Stop Container
+      community.docker.docker_compose_v2:
+        project_src: /root/ansible-jenkins-deploy/python-app/
+        state: stopped
+      when: action == "5"
+    - name: Remove Container
+      community.docker.docker_compose_v2:
+        project_src: /root/ansible-jenkins-deploy/python-app/
+        state: absent
+      when: action == "6"
+    - name: Open port 5000 in the public zone
+      firewalld:
+        port: "{{ port_number }}"
+        state: enabled
+        zone: public
+      when: action == "7"
+    - name: Close port 5000 on firewalld (TCP)
+      firewalld:
+        port: "{{ port_number }}"
+        state: disabled
+      when: action == "8"
+
+    - name: Exit (No action)
+      debug:
+        msg: "No action executed. "
+      when: action == "9"
