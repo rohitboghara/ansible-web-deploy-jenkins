@@ -15,7 +15,7 @@ pipeline {
         stage('Deploy via Ansible') {
             steps {
                 sh '''
-                ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml --become
+                ansible-playbook -i ansible/inventory/hosts.ini ansible/playbook.yml
                 '''
             }
         }
