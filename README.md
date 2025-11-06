@@ -120,7 +120,8 @@ ansible-web-deploy-jenkins/
 ├── ansible/
 │   ├── ansible.cfg
 │   ├── hosts.ini
-│   └── deploy.yml
+│   ├── deploy.yml
+|   └── roles
 └── Jenkinsfile
 ```
 
