@@ -14,20 +14,26 @@ pipeline {
 
         stage('Deploy via Ansible') {
             steps {
-                sh '''
-                 ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
-                '''
+                withCredentials([string(credentialsId: 'BECOME_PASS_ID', variable: 'BECOME_PASS')]) {
+                    sh '''
+                        echo "Running Ansible Deployment..."
+
+                        ansible-playbook -i ansible/hosts.ini ansible/deploy.yml \
+                            --extra-vars "ansible_become_pass=${BECOME_PASS}"
+
+                        echo "Playbook execution completed."
+                    '''
+                }
             }
         }
     }
 
     post {
         success {
-            echo '✅ Ansible Deployment Successful!'
+            echo 'Ansible Deployment Successful!'
         }
         failure {
-            echo '❌ Ansible Deployment Failed!'
+            echo 'Ansible Deployment Failed!'
         }
     }
 }
-
